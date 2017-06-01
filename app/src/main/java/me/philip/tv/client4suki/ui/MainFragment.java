@@ -12,7 +12,7 @@
  * the License.
  */
 
-package me.philip.tv.client4suki;
+package me.philip.tv.client4suki.ui;
 
 import java.net.URI;
 import java.util.Collections;
@@ -50,6 +50,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+
+import me.philip.tv.client4suki.presenter.CardPresenter;
+import me.philip.tv.client4suki.model.Movie;
+import me.philip.tv.client4suki.data.MovieList;
+import me.philip.tv.client4suki.R;
 
 public class MainFragment extends BrowseFragment {
     private static final String TAG = "MainFragment";

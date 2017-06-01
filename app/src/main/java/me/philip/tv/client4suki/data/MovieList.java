@@ -1,7 +1,9 @@
-package me.philip.tv.client4suki;
+package me.philip.tv.client4suki.data;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import me.philip.tv.client4suki.model.Movie;
 
 public final class MovieList {
     public static final String MOVIE_CATEGORY[] = {

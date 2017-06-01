@@ -26,7 +26,7 @@
 
     <fragment
         android:id="@+id/playback_controls_fragment"
-        android:name="me.philip.tv.client4suki.PlaybackOverlayFragment"
+        android:name="me.philip.tv.client4suki.ui.PlaybackOverlayFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

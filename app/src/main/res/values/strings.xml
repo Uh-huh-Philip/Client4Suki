@@ -29,6 +29,14 @@
     <string name="should_start">shouldStart</string>
     <string name="start_position">startPosition</string>
     <string name="search_results">Search Results</string>
+    <string name="guidedstep_title">Please Login</string>
+    <string name="guidedstep_breadcrumb"></string>
+    <string name="guidedstep_first_description">Set your host server here</string>
+    <string name="guidedstep_second_description">Input your user name</string>
+    <string name="guidedstep_third_description">Input your password</string>
+    <string name="guidedstep_hostname">IP/URL</string>
+    <string name="guidedstep_usr">User Name</string>
+    <string name="guidedstep_psw">Password</string>
 
     <!-- Error messages -->
     <string name="video_error_media_load_timeout">Media loading timed out</string>

@@ -12,7 +12,7 @@
  * the License.
  */
 
-package me.philip.tv.client4suki;
+package me.philip.tv.client4suki.model;
 
 import android.util.Log;
 

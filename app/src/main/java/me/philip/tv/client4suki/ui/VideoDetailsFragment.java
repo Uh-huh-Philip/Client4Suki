@@ -12,7 +12,7 @@
  * the License.
  */
 
-package me.philip.tv.client4suki;
+package me.philip.tv.client4suki.ui;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -45,6 +45,13 @@ import com.bumptech.glide.request.target.SimpleTarget;
 
 import java.util.Collections;
 import java.util.List;
+
+import me.philip.tv.client4suki.presenter.CardPresenter;
+import me.philip.tv.client4suki.presenter.DetailsDescriptionPresenter;
+import me.philip.tv.client4suki.model.Movie;
+import me.philip.tv.client4suki.data.MovieList;
+import me.philip.tv.client4suki.R;
+import me.philip.tv.client4suki.Utils;
 
 /*
  * LeanbackDetailsFragment extends DetailsFragment, a Wrapper fragment for leanback details screens.

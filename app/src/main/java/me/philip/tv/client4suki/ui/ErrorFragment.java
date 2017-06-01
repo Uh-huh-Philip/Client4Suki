@@ -11,11 +11,13 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package me.philip.tv.client4suki;
+package me.philip.tv.client4suki.ui;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+
+import me.philip.tv.client4suki.R;
 
 /*
  * This class demonstrates how to extend ErrorFragment

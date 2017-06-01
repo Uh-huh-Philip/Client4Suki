@@ -12,7 +12,7 @@
  * the License.
  */
 
-package me.philip.tv.client4suki;
+package me.philip.tv.client4suki.ui;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -28,6 +28,9 @@ import android.widget.VideoView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+
+import me.philip.tv.client4suki.model.Movie;
+import me.philip.tv.client4suki.R;
 
 /**
  * PlaybackOverlayActivity for video playback that loads PlaybackOverlayFragment

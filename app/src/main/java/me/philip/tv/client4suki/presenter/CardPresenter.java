@@ -12,7 +12,7 @@
  * the License.
  */
 
-package me.philip.tv.client4suki;
+package me.philip.tv.client4suki.presenter;
 
 import android.graphics.drawable.Drawable;
 import android.support.v17.leanback.widget.ImageCardView;
@@ -21,6 +21,9 @@ import android.util.Log;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+
+import me.philip.tv.client4suki.R;
+import me.philip.tv.client4suki.model.Movie;
 
 /*
  * A CardPresenter is used to generate Views and bind Objects to them on demand.

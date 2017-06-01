@@ -12,7 +12,7 @@
  * the License.
  */
 
-package me.philip.tv.client4suki;
+package me.philip.tv.client4suki.ui;
 
 import android.app.Activity;
 
@@ -41,6 +41,7 @@ import android.support.v17.leanback.widget.PlaybackControlsRow.SkipNextAction;
 import android.support.v17.leanback.widget.PlaybackControlsRow.SkipPreviousAction;
 import android.support.v17.leanback.widget.PlaybackControlsRow.ThumbsDownAction;
 import android.support.v17.leanback.widget.PlaybackControlsRow.ThumbsUpAction;
+import android.support.v17.leanback.widget.PlaybackControlsRow.PictureInPictureAction;
 import android.support.v17.leanback.widget.PlaybackControlsRowPresenter;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
@@ -56,6 +57,11 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import me.philip.tv.client4suki.presenter.CardPresenter;
+import me.philip.tv.client4suki.model.Movie;
+import me.philip.tv.client4suki.data.MovieList;
+import me.philip.tv.client4suki.R;
 
 /*
  * Class for video playback with media control
@@ -86,6 +92,7 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
     private RewindAction mRewindAction;
     private SkipNextAction mSkipNextAction;
     private SkipPreviousAction mSkipPreviousAction;
+    private PictureInPictureAction mPictureInPictureAction;
     private PlaybackControlsRow mPlaybackControlsRow;
     private ArrayList<Movie> mItems = new ArrayList<Movie>();
     private int mCurrentItem;
@@ -170,6 +177,13 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
                     Toast.makeText(getActivity(), "TODO: Fast Forward", Toast.LENGTH_SHORT).show();
                 } else if (action.getId() == mRewindAction.getId()) {
                     Toast.makeText(getActivity(), "TODO: Rewind", Toast.LENGTH_SHORT).show();
+                } else if (action.getId() == mPictureInPictureAction.getId()) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        getActivity().enterPictureInPictureMode();
+                        return;
+                    } else {
+                        Toast.makeText(getActivity(), "Pictrue in Pictrue is no Capable", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 if (action instanceof PlaybackControlsRow.MultiAction) {
                     ((PlaybackControlsRow.MultiAction) action).nextIndex();
@@ -244,6 +258,7 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
         mSkipPreviousAction = new PlaybackControlsRow.SkipPreviousAction(getActivity());
         mFastForwardAction = new PlaybackControlsRow.FastForwardAction(getActivity());
         mRewindAction = new PlaybackControlsRow.RewindAction(getActivity());
+        mPictureInPictureAction = new PlaybackControlsRow.PictureInPictureAction(getActivity());
 
         if (PRIMARY_CONTROLS > 5) {
             mPrimaryActionsAdapter.add(mThumbsUpAction);
@@ -259,6 +274,7 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
             mPrimaryActionsAdapter.add(new PlaybackControlsRow.FastForwardAction(getActivity()));
         }
         mPrimaryActionsAdapter.add(mSkipNextAction);
+        mPrimaryActionsAdapter.add(mPictureInPictureAction);
 
         mSecondaryActionsAdapter.add(mRepeatAction);
         mSecondaryActionsAdapter.add(mShuffleAction);
