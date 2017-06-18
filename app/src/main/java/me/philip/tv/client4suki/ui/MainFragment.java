@@ -14,17 +14,23 @@
 
 package me.philip.tv.client4suki.ui;
 
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v17.leanback.app.BackgroundManager;
 import android.support.v17.leanback.app.BrowseFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
@@ -50,10 +56,20 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+import me.philip.tv.client4suki.api.Client;
+import me.philip.tv.client4suki.model.Bangumi;
 import me.philip.tv.client4suki.presenter.CardPresenter;
-import me.philip.tv.client4suki.model.Movie;
-import me.philip.tv.client4suki.data.MovieList;
 import me.philip.tv.client4suki.R;
 
 public class MainFragment extends BrowseFragment {
@@ -62,8 +78,8 @@ public class MainFragment extends BrowseFragment {
     private static final int BACKGROUND_UPDATE_DELAY = 300;
     private static final int GRID_ITEM_WIDTH = 200;
     private static final int GRID_ITEM_HEIGHT = 200;
-    private static final int NUM_ROWS = 6;
-    private static final int NUM_COLS = 15;
+//    private static final int NUM_ROWS = 6;
+//    private static final int NUM_COLS = 15;
 
     private final Handler mHandler = new Handler();
     private ArrayObjectAdapter mRowsAdapter;
@@ -72,6 +88,9 @@ public class MainFragment extends BrowseFragment {
     private Timer mBackgroundTimer;
     private URI mBackgroundURI;
     private BackgroundManager mBackgroundManager;
+    private String username;
+
+    private List<Bangumi> bangumiList;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -82,7 +101,9 @@ public class MainFragment extends BrowseFragment {
 
         setupUIElements();
 
-        loadRows();
+        getUserInfo();
+
+        getBangumi();
 
         setupEventListeners();
     }
@@ -96,26 +117,42 @@ public class MainFragment extends BrowseFragment {
         }
     }
 
-    private void loadRows() {
-        List<Movie> list = MovieList.setupMovies();
+    private void getUserInfo() {
+        Client client = new Client();
+        client.initial(getActivity(), PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(LoginActivity.HOST, null));
+        client.getEndpoint().getUserInfo()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JsonObject>() {
+                    @Override
+                    public void accept(JsonObject jsonObject) throws Exception {
+                        JsonObject data = jsonObject.getAsJsonObject("data");
+                        username = data.getAsJsonPrimitive("name").getAsString();
+                        Toast.makeText(getActivity(), "Welcome! " + username, Toast.LENGTH_SHORT).show();
+                        Log.d("TAG", username);
+                    }
+                });
+    }
 
+    private void loadRows() {
         mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
         CardPresenter cardPresenter = new CardPresenter();
+        ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(cardPresenter);
 
         int i;
-        for (i = 0; i < NUM_ROWS; i++) {
-            if (i != 0) {
-                Collections.shuffle(list);
-            }
-            ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(cardPresenter);
-            for (int j = 0; j < NUM_COLS; j++) {
-                listRowAdapter.add(list.get(j % 5));
-            }
-            HeaderItem header = new HeaderItem(i, MovieList.MOVIE_CATEGORY[i]);
-            mRowsAdapter.add(new ListRow(header, listRowAdapter));
+        for (i = 0; i < bangumiList.size(); i++) {
+//            for (int j = 0; j < NUM_COLS; j++) {
+//                listRowAdapter.add(list.get(j % 5));
+//            }
+//            HeaderItem header = new HeaderItem(i, MovieList.MOVIE_CATEGORY[i]);
+
+            listRowAdapter.add(bangumiList.get(i));
         }
 
-        HeaderItem gridHeader = new HeaderItem(i, "PREFERENCES");
+
+        HeaderItem header = new HeaderItem(0, "OnAir");
+        mRowsAdapter.add(new ListRow(header, listRowAdapter));
+        HeaderItem gridHeader = new HeaderItem(1, "PREFERENCES");
 
         GridItemPresenter mGridPresenter = new GridItemPresenter();
         ArrayObjectAdapter gridRowAdapter = new ArrayObjectAdapter(mGridPresenter);
@@ -126,6 +163,24 @@ public class MainFragment extends BrowseFragment {
 
         setAdapter(mRowsAdapter);
 
+    }
+
+    private void getBangumi(){
+        Client client = new Client();
+        client.initial(getActivity(), PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(LoginActivity.HOST, null));
+
+        client.getEndpoint().onAir()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JsonObject>() {
+                    @Override
+                    public void accept(JsonObject jsonObject) throws Exception {
+                        JsonArray data = jsonObject.getAsJsonArray("data");
+                        bangumiList = new Gson().fromJson(data, new TypeToken<List<Bangumi>>(){}.getType());
+                        loadRows();
+                        Log.d("TAG", "Bangumi Onair Loaded");
+                    }
+                });
     }
 
     private void prepareBackgroundManager() {
@@ -196,17 +251,12 @@ public class MainFragment extends BrowseFragment {
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
                                   RowPresenter.ViewHolder rowViewHolder, Row row) {
 
-            if (item instanceof Movie) {
-                Movie movie = (Movie) item;
+            if (item instanceof Bangumi) {
+                Bangumi bangumi = (Bangumi) item;
                 Log.d(TAG, "Item: " + item.toString());
                 Intent intent = new Intent(getActivity(), DetailsActivity.class);
-                intent.putExtra(DetailsActivity.MOVIE, movie);
-
-                Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        getActivity(),
-                        ((ImageCardView) itemViewHolder.view).getMainImageView(),
-                        DetailsActivity.SHARED_ELEMENT_NAME).toBundle();
-                getActivity().startActivity(intent, bundle);
+                intent.putExtra(DetailsActivity.BANGUMI, bangumi);
+                startActivity(intent);
             } else if (item instanceof String) {
                 if (((String) item).indexOf(getString(R.string.error_fragment)) >= 0) {
                     Intent intent = new Intent(getActivity(), BrowseErrorActivity.class);
@@ -223,8 +273,12 @@ public class MainFragment extends BrowseFragment {
         @Override
         public void onItemSelected(Presenter.ViewHolder itemViewHolder, Object item,
                                    RowPresenter.ViewHolder rowViewHolder, Row row) {
-            if (item instanceof Movie) {
-                mBackgroundURI = ((Movie) item).getBackgroundImageURI();
+            if (item instanceof Bangumi) {
+                try {
+                    mBackgroundURI = new URI((((Bangumi) item).getCover()));
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
                 startBackgroundTimer();
             }
 

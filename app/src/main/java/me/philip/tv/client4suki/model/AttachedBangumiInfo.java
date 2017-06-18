@@ -1,13 +1,12 @@
 package me.philip.tv.client4suki.model;
 
-
 import java.io.Serializable;
 
 /**
- * Created by phili on 5/30/2017.
+ * Created by phili on 6/16/2017.
  */
 
-public class Bangumi implements Serializable {
+public class AttachedBangumiInfo implements Serializable {
     private String id;
     private String bgm_id;
     private String name;
@@ -30,7 +29,6 @@ public class Bangumi implements Serializable {
     private String rss;
     private String eps_regex;
     private String eps;
-    private String favorite_status;
 
     public String getId() {
         return id;
@@ -206,13 +204,5 @@ public class Bangumi implements Serializable {
 
     public void setEps(String eps) {
         this.eps = eps;
-    }
-
-    public String getFavorite_status() {
-        return favorite_status;
-    }
-
-    public void setFavorite_status(String favorite_status) {
-        this.favorite_status = favorite_status;
     }
 }

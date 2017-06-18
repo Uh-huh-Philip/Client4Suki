@@ -21,6 +21,7 @@ import android.media.MediaPlayer;
 import android.media.session.MediaSession;
 import android.media.session.PlaybackState;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.widget.VideoView;
@@ -29,6 +30,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 
+import me.philip.tv.client4suki.model.Bangumi;
+import me.philip.tv.client4suki.model.EpisodeDetail;
 import me.philip.tv.client4suki.model.Movie;
 import me.philip.tv.client4suki.R;
 
@@ -52,7 +55,7 @@ public class PlaybackOverlayActivity extends Activity implements
         setContentView(R.layout.playback_controls);
         loadViews();
         setupCallbacks();
-        mSession = new MediaSession(this, "LeanbackSampleApp");
+        mSession = new MediaSession(this, "Suki");
         mSession.setCallback(new MediaSessionCallback());
         mSession.setFlags(MediaSession.FLAG_HANDLES_MEDIA_BUTTONS |
                 MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
@@ -91,8 +94,8 @@ public class PlaybackOverlayActivity extends Activity implements
     /**
      * Implementation of OnPlayPauseClickedListener
      */
-    public void onFragmentPlayPause(Movie movie, int position, Boolean playPause) {
-        mVideoView.setVideoPath(movie.getVideoUrl());
+    public void onFragmentPlayPause(EpisodeDetail episodeDetail, int position, Boolean playPause) {
+        mVideoView.setVideoPath(episodeDetail.getVideo_files()[0].getUrl());
 
         if (position == 0 || mPlaybackState == LeanbackPlaybackState.IDLE) {
             setupCallbacks();
@@ -110,7 +113,8 @@ public class PlaybackOverlayActivity extends Activity implements
             mVideoView.pause();
         }
         updatePlaybackState(position);
-        updateMetadata(movie);
+        //TODO
+//        updateMetadata(episodeDetail);
     }
 
     private void updatePlaybackState(int position) {
@@ -136,32 +140,33 @@ public class PlaybackOverlayActivity extends Activity implements
         return actions;
     }
 
-    private void updateMetadata(final Movie movie) {
-        final MediaMetadata.Builder metadataBuilder = new MediaMetadata.Builder();
-
-        String title = movie.getTitle().replace("_", " -");
-
-        metadataBuilder.putString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE, title);
-        metadataBuilder.putString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE,
-                movie.getDescription());
-        metadataBuilder.putString(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI,
-                movie.getCardImageUrl());
-
-        // And at minimum the title and artist for legacy support
-        metadataBuilder.putString(MediaMetadata.METADATA_KEY_TITLE, title);
-        metadataBuilder.putString(MediaMetadata.METADATA_KEY_ARTIST, movie.getStudio());
-
-        Glide.with(this)
-                .load(Uri.parse(movie.getCardImageUrl()))
-                .asBitmap()
-                .into(new SimpleTarget<Bitmap>(500, 500) {
-                    @Override
-                    public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
-                        metadataBuilder.putBitmap(MediaMetadata.METADATA_KEY_ART, bitmap);
-                        mSession.setMetadata(metadataBuilder.build());
-                    }
-                });
-    }
+    //TODO
+//    private void updateMetadata(final EpisodeDetail episodeDetail) {
+//        final MediaMetadata.Builder metadataBuilder = new MediaMetadata.Builder();
+//
+//        String title = movie.getTitle().replace("_", " -");
+//
+//        metadataBuilder.putString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE, title);
+//        metadataBuilder.putString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE,
+//                movie.getDescription());
+//        metadataBuilder.putString(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI,
+//                movie.getCardImageUrl());
+//
+//        // And at minimum the title and artist for legacy support
+//        metadataBuilder.putString(MediaMetadata.METADATA_KEY_TITLE, title);
+//        metadataBuilder.putString(MediaMetadata.METADATA_KEY_ARTIST, movie.getStudio());
+//
+//        Glide.with(this)
+//                .load(Uri.parse(movie.getCardImageUrl()))
+//                .asBitmap()
+//                .into(new SimpleTarget<Bitmap>(500, 500) {
+//                    @Override
+//                    public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
+//                        metadataBuilder.putBitmap(MediaMetadata.METADATA_KEY_ART, bitmap);
+//                        mSession.setMetadata(metadataBuilder.build());
+//                    }
+//                });
+//    }
 
     private void loadViews() {
         mVideoView = (VideoView) findViewById(R.id.videoView);
@@ -216,7 +221,19 @@ public class PlaybackOverlayActivity extends Activity implements
     @Override
     public void onPause() {
         super.onPause();
-        if (mVideoView.isPlaying()) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (isInPictureInPictureMode()) {
+                // Continue playback
+                mSession.setActive(true);
+            } else if (mVideoView.isPlaying()) {
+                if (!requestVisibleBehind(true)) {
+                    // Try to play behind launcher, but if it fails, stop playback.
+                    stopPlayback();
+                }
+            } else {
+                requestVisibleBehind(false);
+            }
+        } else if (mVideoView.isPlaying()) {
             if (!requestVisibleBehind(true)) {
                 // Try to play behind launcher, but if it fails, stop playback.
                 stopPlayback();
@@ -243,7 +260,6 @@ public class PlaybackOverlayActivity extends Activity implements
             mVideoView.stopPlayback();
         }
     }
-
     /*
      * List of various states that we can be in
      */

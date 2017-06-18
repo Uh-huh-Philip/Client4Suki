@@ -23,6 +23,8 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 
 import me.philip.tv.client4suki.R;
+import me.philip.tv.client4suki.model.Bangumi;
+import me.philip.tv.client4suki.model.Episode;
 import me.philip.tv.client4suki.model.Movie;
 
 /*
@@ -70,19 +72,37 @@ public class CardPresenter extends Presenter {
 
     @Override
     public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
-        Movie movie = (Movie) item;
-        ImageCardView cardView = (ImageCardView) viewHolder.view;
+        if(item instanceof Episode) {
+            Episode episode = (Episode) item;
+            ImageCardView cardView = (ImageCardView) viewHolder.view;
 
-        Log.d(TAG, "onBindViewHolder");
-        if (movie.getCardImageUrl() != null) {
-            cardView.setTitleText(movie.getTitle());
-            cardView.setContentText(movie.getStudio());
-            cardView.setMainImageDimensions(CARD_WIDTH, CARD_HEIGHT);
-            Glide.with(viewHolder.view.getContext())
-                    .load(movie.getCardImageUrl())
-                    .centerCrop()
-                    .error(mDefaultCardImage)
-                    .into(cardView.getMainImageView());
+            Log.d(TAG, "onBindViewHolder");
+            if (episode.getThumbnail() != null) {
+                cardView.setTitleText(new Integer(episode.getEpisode_no()).toString());
+                cardView.setContentText(episode.getName_cn());
+                cardView.setMainImageDimensions(CARD_WIDTH, CARD_HEIGHT);
+                Glide.with(viewHolder.view.getContext())
+                        .load(episode.getThumbnail())
+                        .centerCrop()
+                        .error(mDefaultCardImage)
+                        .into(cardView.getMainImageView());
+            }
+        }
+
+        if(item instanceof Bangumi) {
+            Bangumi bangumi = (Bangumi) item;
+            ImageCardView cardView = (ImageCardView) viewHolder.view;
+
+            Log.d(TAG, "onBindViewHolder");
+            if (bangumi.getImage() != null) {
+                cardView.setTitleText(bangumi.getName_cn());
+                cardView.setMainImageDimensions(CARD_WIDTH, CARD_HEIGHT);
+                Glide.with(viewHolder.view.getContext())
+                        .load(bangumi.getImage())
+                        .centerCrop()
+                        .error(mDefaultCardImage)
+                        .into(cardView.getMainImageView());
+            }
         }
     }
 

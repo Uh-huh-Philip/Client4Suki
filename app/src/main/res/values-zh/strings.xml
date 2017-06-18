@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Client4Suki</string>
+    <string name="to_be_done">此功能尚未完成</string>
+    <string name="favorite">收藏</string>
+    <string name="episodes">剧集</string>
+</resources>

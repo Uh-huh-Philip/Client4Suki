@@ -1,36 +1,36 @@
 package me.philip.tv.client4suki.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Account {
-    private String host;
-    private String usr;
-    private String psw;
-    public void Account(){
-        this.host = "";
-        this.usr = "";
-        this.psw = "";
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
-    }
+    @SerializedName("name")
+    private String name;
+    @SerializedName("password")
+    private String password;
+    @SerializedName("remmember")
+    private Boolean remmember;
 
     public String getUsr() {
-        return usr;
+        return name;
     }
 
     public void setUsr(String usr) {
-        this.usr = usr;
+        this.name = usr;
     }
 
     public String getPsw() {
-        return psw;
+        return password;
     }
 
     public void setPsw(String psw) {
-        this.psw = psw;
+        this.password = psw;
+    }
+
+    public Boolean getRemember() {
+        return remmember;
+    }
+
+    public void setRemember(Boolean remember) {
+        this.remmember = remember;
     }
 }

@@ -16,18 +16,19 @@ package me.philip.tv.client4suki.presenter;
 
 import android.support.v17.leanback.widget.AbstractDetailsDescriptionPresenter;
 
+import me.philip.tv.client4suki.model.Bangumi;
 import me.philip.tv.client4suki.model.Movie;
 
 public class DetailsDescriptionPresenter extends AbstractDetailsDescriptionPresenter {
 
     @Override
     protected void onBindDescription(ViewHolder viewHolder, Object item) {
-        Movie movie = (Movie) item;
+        Bangumi bangumi = (Bangumi) item;
 
-        if (movie != null) {
-            viewHolder.getTitle().setText(movie.getTitle());
-            viewHolder.getSubtitle().setText(movie.getStudio());
-            viewHolder.getBody().setText(movie.getDescription());
+        if (bangumi != null) {
+            viewHolder.getTitle().setText(bangumi.getName_cn());
+            viewHolder.getSubtitle().setText("放送开始: " + bangumi.getAir_date());
+            viewHolder.getBody().setText(bangumi.getSummary());
         }
     }
 }

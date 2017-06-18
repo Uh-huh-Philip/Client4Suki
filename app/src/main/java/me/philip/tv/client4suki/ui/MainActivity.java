@@ -34,13 +34,5 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if(!sharedPreferences.getBoolean(OnboardingFragment.COMPLETED_ONBOARDING, true)) {
-            // This is the first time running the app, let's go to onboarding
-            startActivity(new Intent(this, OnboardingActivity.class));
-        } else  if(!sharedPreferences.getBoolean(LoginActivity.COMPLETED_LOGIN, true)) {
-            // This is the first time running the app, let's go to onboarding
-            startActivity(new Intent(this, LoginActivity.class));
-        }
     }
 }

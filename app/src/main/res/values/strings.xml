@@ -1,36 +1,38 @@
 <resources>
     <string name="app_name">Client4Suki</string>
-    <string name="browse_title"><![CDATA[Videos by Your Company]]></string>
-    <string name="related_movies">Related Videos</string>
-    <string name="vertical_grid_title"><![CDATA[Vertical Video Grid]]></string>
-    <string name="error">Error</string>
-    <string name="ok">OK</string>
-    <string name="pause">Pause</string>
-    <string name="play">Play</string>
-    <string name="stop">Stop</string>
-    <string name="init_text">00:00</string>
-    <string name="play_pause_description">Play Pause Button</string>
-    <string name="loading">Loading&#8230;</string>
-    <string name="no_video_found">No video was found</string>
-    <string name="about_app">About DemoCast Player</string>
-    <string name="version">Version: %1$s</string>
-    <string name="popular_header">Popular Videos</string>
-    <string name="preferences">PREFERENCES</string>
-    <string name="grid_view">Grid View</string>
-    <string name="error_fragment">Error Fragment</string>
-    <string name="personal_settings">Personal Settings</string>
-    <string name="watch_trailer_1">Watch trailer</string>
-    <string name="watch_trailer_2">FREE</string>
-    <string name="rent_1">Rent By Day</string>
-    <string name="rent_2">From $1.99</string>
-    <string name="buy_1">Buy and Own</string>
-    <string name="buy_2">AT $9.99</string>
-    <string name="movie">Movie</string>
-    <string name="should_start">shouldStart</string>
-    <string name="start_position">startPosition</string>
-    <string name="search_results">Search Results</string>
+    <string name="browse_title" translatable="false"><![CDATA[SUKI.MOE]]></string>
+    <string name="related_movies" translatable="false">Related Videos</string>
+    <string name="episodes">Episodes</string>
+    <string name="vertical_grid_title" translatable="false"><![CDATA[Vertical Video Grid]]></string>
+    <string name="error" translatable="false">Error</string>
+    <string name="ok" translatable="false">OK</string>
+    <string name="pause" translatable="false">Pause</string>
+    <string name="play" translatable="false">Play</string>
+    <string name="stop" translatable="false">Stop</string>
+    <string name="init_text" translatable="false">00:00</string>
+    <string name="play_pause_description" translatable="false">Play Pause Button</string>
+    <string name="loading" translatable="false">Loading&#8230;</string>
+    <string name="no_video_found" translatable="false">No video was found</string>
+    <string name="about_app" translatable="false">About DemoCast Player</string>
+    <string name="version" translatable="false">Version: %1$s</string>
+    <string name="popular_header" translatable="false">Popular Videos</string>
+    <string name="preferences" translatable="false">PREFERENCES</string>
+    <string name="grid_view" translatable="false">Grid View</string>
+    <string name="error_fragment" translatable="false">Error Fragment</string>
+    <string name="personal_settings" translatable="false">Personal Settings</string>
+    <!--<string name="watch_trailer_1" translatable="false">Watch trailer</string>-->
+    <!--<string name="watch_trailer_2" translatable="false">FREE</string>-->
+    <!--<string name="rent_1" translatable="false">Rent By Day</string>-->
+    <!--<string name="rent_2" translatable="false">From $1.99</string>-->
+    <!--<string name="buy_1" translatable="false">Buy and Own</string>-->
+    <!--<string name="buy_2" translatable="false">AT $9.99</string>-->
+    <string name="favorite">Favorite</string>
+    <string name="movie" translatable="false">Movie</string>
+    <string name="should_start" translatable="false">shouldStart</string>
+    <string name="start_position" translatable="false">startPosition</string>
+    <string name="search_results" translatable="false">Search Results</string>
     <string name="guidedstep_title">Please Login</string>
-    <string name="guidedstep_breadcrumb"></string>
+    <string name="guidedstep_breadcrumb" translatable="false"></string>
     <string name="guidedstep_first_description">Set your host server here</string>
     <string name="guidedstep_second_description">Input your user name</string>
     <string name="guidedstep_third_description">Input your password</string>
@@ -39,10 +41,14 @@
     <string name="guidedstep_psw">Password</string>
 
     <!-- Error messages -->
-    <string name="video_error_media_load_timeout">Media loading timed out</string>
-    <string name="video_error_server_inaccessible">Media server was not reachable</string>
-    <string name="video_error_unknown_error">Failed to load video</string>
-    <string name="error_fragment_message">An error occurred</string>
-    <string name="dismiss_error">Dismiss</string>
-    <string name="oops">Oops</string>
+    <string name="video_error_media_load_timeout" translatable="false">Media loading timed out</string>
+    <string name="video_error_server_inaccessible" translatable="false">Media server was not reachable</string>
+    <string name="video_error_unknown_error" translatable="false">Failed to load video</string>
+    <string name="error_fragment_message" translatable="false">An error occurred</string>
+    <string name="dismiss_error" translatable="false">Dismiss</string>
+    <string name="oops" translatable="false">Oops</string>
+
+    <!-- Dev messages -->
+
+    <string name="to_be_done">This function is not available yet</string>
 </resources>
