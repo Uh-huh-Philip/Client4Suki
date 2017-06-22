@@ -22,7 +22,9 @@ public interface Endpoint {
     public Observable<JsonObject> getUserInfo();
 
     @GET("api/home/on_air")
-    public Observable<JsonObject> onAir();
+    public Observable<JsonObject> onAir(
+            @Query("type") int count
+    );
 
     @GET("api/home/my_bangumi")
     public Observable<JsonObject> myBangumi();

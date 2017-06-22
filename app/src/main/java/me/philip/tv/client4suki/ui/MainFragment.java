@@ -169,7 +169,7 @@ public class MainFragment extends BrowseFragment {
         Client client = new Client();
         client.initial(getActivity(), PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(LoginActivity.HOST, null));
 
-        client.getEndpoint().onAir()
+        client.getEndpoint().onAir(2)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<JsonObject>() {

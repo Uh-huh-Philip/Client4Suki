@@ -14,6 +14,7 @@
 
 package me.philip.tv.client4suki.presenter;
 
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.Presenter;
@@ -93,10 +94,14 @@ public class CardPresenter extends Presenter {
             Bangumi bangumi = (Bangumi) item;
             ImageCardView cardView = (ImageCardView) viewHolder.view;
 
+            Resources res = cardView.getResources();
+            int width = res.getDimensionPixelSize(R.dimen.card_width);
+            int height = res.getDimensionPixelSize(R.dimen.card_height);
+
             Log.d(TAG, "onBindViewHolder");
             if (bangumi.getImage() != null) {
                 cardView.setTitleText(bangumi.getName_cn());
-                cardView.setMainImageDimensions(CARD_WIDTH, CARD_HEIGHT);
+                cardView.setMainImageDimensions(width, height);
                 Glide.with(viewHolder.view.getContext())
                         .load(bangumi.getImage())
                         .centerCrop()

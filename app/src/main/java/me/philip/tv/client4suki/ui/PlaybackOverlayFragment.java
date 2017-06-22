@@ -112,7 +112,7 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
 
 //        mItems = new ArrayList<Movie>();
         mSelectedEpisode = (EpisodeDetail) getActivity()
-                .getIntent().getSerializableExtra(DetailsActivity.BANGUMI);
+                .getIntent().getSerializableExtra(DetailsActivity.EPISODE);
 
 //        List<Movie> movies = MovieList.list;
 //

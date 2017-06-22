@@ -40,6 +40,17 @@
     <string name="guidedstep_usr">User Name</string>
     <string name="guidedstep_psw">Password</string>
 
+    <!-- Home Title -->
+    <string name="on_air">On Air</string>
+    <string name="my_favorite">My Favorite</string>
+    <string name="all">All</string>
+    <string name="setting">Settings</string>
+
+    <!-- Category -->
+    <string name="Bangumi">Bangumi</string>
+    <string name="TV_serious">TV Serious</string>
+
+
     <!-- Error messages -->
     <string name="video_error_media_load_timeout" translatable="false">Media loading timed out</string>
     <string name="video_error_server_inaccessible" translatable="false">Media server was not reachable</string>

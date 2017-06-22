@@ -74,6 +74,7 @@ import me.philip.tv.client4suki.Utils;
  */
 public class VideoDetailsFragment extends DetailsFragment {
     private static final String TAG = "VideoDetailsFragment";
+    private static final String EPISODES = "EpisodeList";
 
     private static final int ACTION_FAVORITE = 1;
 //    private static final int ACTION_RENT = 2;
@@ -323,8 +324,10 @@ public class VideoDetailsFragment extends DetailsFragment {
 //                                JsonObject data = jsonObject.getAsJsonObject("data");
                                 EpisodeDetail episodeDetail = new Gson().fromJson(jsonObject, EpisodeDetail.class);
                                 Log.d("TAG", "EpisodeDetail Loaded");
-                                Intent intent = new Intent(getActivity(), PlaybackOverlayActivity.class);
-                                intent.putExtra(DetailsActivity.BANGUMI, episodeDetail);
+                                //TODO
+//                                Intent intent = new Intent(getActivity(), PlaybackOverlayActivity.class);
+                                Intent intent = new Intent(getActivity(), PlaybackActivity.class);
+                                intent.putExtra(DetailsActivity.EPISODE, episodeDetail);
                                 startActivity(intent);
                             }
                         });
