@@ -269,7 +269,6 @@ public class EpisodePlayFragment extends PlaybackFragment {
         mRowsAdapter = new ArrayObjectAdapter(ps);
 
 
-
         mRowsAdapter.add(controlsRow);
 
         addOtherRows();
@@ -352,7 +351,7 @@ public class EpisodePlayFragment extends PlaybackFragment {
         super.notifyPlaybackRowChanged();
     }
 
-    public void createMediaSession(){
+    public void createMediaSession() {
         if (mMediaSession == null) {
             // Create a MediaSessionCompat
             mMediaSession = new MediaSession(getActivity(), LOG_TAG);
@@ -363,9 +362,9 @@ public class EpisodePlayFragment extends PlaybackFragment {
                             MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
             mMediaSession.setActive(true);
 
-                ((FragmentActivity) getActivity()).setMediaController(
-                        new MediaController(getActivity(), mMediaSession.getSessionToken()));
-                setPlaybackState(PlaybackState.STATE_NONE);
+            ((FragmentActivity) getActivity()).setMediaController(
+                    new MediaController(getActivity(), mMediaSession.getSessionToken()));
+            setPlaybackState(PlaybackState.STATE_NONE);
 
 
             // MySessionCallback has methods that handle callbacks from a media controller
@@ -449,6 +448,22 @@ public class EpisodePlayFragment extends PlaybackFragment {
         }
     }
 
+    public void FastForward() {
+        if (mGlue.isMediaPlaying()) {
+            if (getCurrentPosition() <= mPlayer.getDuration() - 10000)
+                mPlayer.seekTo(getCurrentPosition() + 10000);
+        }
+    }
+
+    public void Rewind() {
+        if (mGlue.isMediaPlaying()) {
+            if (getCurrentPosition() <= 10000)
+                mPlayer.seekTo(0);
+            else
+                mPlayer.seekTo(getCurrentPosition() - 10000);
+        }
+    }
+
     private void requestAudioFocus() {
         if (mHasAudioFocus) {
             return;
@@ -484,7 +499,7 @@ public class EpisodePlayFragment extends PlaybackFragment {
 
     private void preparePlayer() {
 
-        if(mPlayer == null) {
+        if (mPlayer == null) {
 
             BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
             TrackSelection.Factory videoTrackSelectionFactory =
@@ -546,7 +561,7 @@ public class EpisodePlayFragment extends PlaybackFragment {
 
         metadataBuilder.putString(MediaMetadata.METADATA_KEY_MEDIA_ID, video.getId());
         metadataBuilder.putString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE, video.getBangumi().getName_cn());
-        metadataBuilder.putString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE, video.getEpisode_no()+". "+video.getName_cn());
+        metadataBuilder.putString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE, video.getEpisode_no() + ". " + video.getName_cn());
         metadataBuilder.putString(MediaMetadata.METADATA_KEY_DISPLAY_DESCRIPTION,
                 video.getName());
 
@@ -626,8 +641,8 @@ public class EpisodePlayFragment extends PlaybackFragment {
     private final class PlaybackItemViewClickedListener implements BaseOnItemViewClickedListener {
         @Override
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Object row) {
-            if (item instanceof Action){
-                EpisodePlayFragment.this.mGlue.onActionClicked((Action)item);
+            if (item instanceof Action) {
+                EpisodePlayFragment.this.mGlue.onActionClicked((Action) item);
             }
         }
     }

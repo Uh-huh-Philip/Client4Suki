@@ -1,13 +1,11 @@
 package me.philip.tv.client4suki.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v17.leanback.app.BackgroundManager;
-import android.support.v17.leanback.app.ProgressBarManager;
 import android.support.v17.leanback.app.RowsFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.HeaderItem;
@@ -37,6 +35,9 @@ import com.google.gson.reflect.TypeToken;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -45,18 +46,21 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import me.philip.tv.client4suki.R;
+import me.philip.tv.client4suki.Utils;
 import me.philip.tv.client4suki.api.Client;
 import me.philip.tv.client4suki.model.Bangumi;
 import me.philip.tv.client4suki.presenter.CardPresenter;
 import okhttp3.HttpUrl;
 
+import static java.lang.System.in;
+
 /**
  * Created by phili on 6/22/2017.
  */
 
-public class BangumiListFragment extends RowsFragment {
+public class AllBangumiFragment extends RowsFragment {
 
-    private static final String TAG = "BangumiListFragment";
+    private static final String TAG = "AllBangumiFragment";
     private static final int BACKGROUND_UPDATE_DELAY = 300;
 
     private final Handler mHandler = new Handler();
@@ -67,8 +71,13 @@ public class BangumiListFragment extends RowsFragment {
     private URI mBackgroundURI;
     private BackgroundManager mBackgroundManager;
     private String username;
+    private int type;
 
     private List<Bangumi> bangumiList;
+
+    AllBangumiFragment(int type){
+        this.type = type;
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -88,10 +97,19 @@ public class BangumiListFragment extends RowsFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
-        ((HomeFragment)getParentFragment()).setTitle(getActivity().getResources().getString(R.string.on_air));
+
+        switch (type){
+            case 2:
+                ((HomeFragment)getParentFragment()).setTitle(getActivity().getResources().getString(R.string.all_bangumi));
+                break;
+            case 6:
+                ((HomeFragment)getParentFragment()).setTitle(getActivity().getResources().getString(R.string.all_tv_serious));
+                break;
+            default:
+                break;
+        }
         ((ProgressBar)getActivity().findViewById(R.id.temp)).setVisibility(View.VISIBLE);
-        getBangumi(6);
-        getBangumi(2);
+        getBangumi();
 
         return super.onCreateView(inflater, container,savedInstanceState);
     }
@@ -99,8 +117,7 @@ public class BangumiListFragment extends RowsFragment {
     @Override
     public void onStart(){
         super.onStart();
-//        getBangumi(6);
-//        getBangumi(2);
+
     }
 
     private void prepareBackgroundManager() {
@@ -125,7 +142,7 @@ public class BangumiListFragment extends RowsFragment {
 //        setSearchAffordanceColor(getResources().getColor(R.color.search_opaque));
 //    }
 
-    private void getBangumi(final int type) {
+    private void getBangumi() {
         Client client = new Client();
         client.initial(getActivity(), PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(LoginActivity.HOST, null));
 
@@ -133,7 +150,7 @@ public class BangumiListFragment extends RowsFragment {
             bangumiList = null;
         }
 
-        client.getEndpoint().onAir(type)
+        client.getEndpoint().getSearchBangumi(-1, "air_date", 1, "desc")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<JsonObject>() {
@@ -143,52 +160,91 @@ public class BangumiListFragment extends RowsFragment {
                         bangumiList = new Gson().fromJson(data, new TypeToken<List<Bangumi>>() {
                         }.getType());
                         if(getActivity()!=null) {
-                            loadRows(type, bangumiList);
+                            loadRows(bangumiList);
                         }
                         Log.d("TAG", "Bangumi Onair Loaded");
                     }
                 });
     }
 
-    private void loadRows(int type, List<Bangumi> bangumis) {
+    private void loadRows(List<Bangumi> bangumis) {
         if (mRowsAdapter == null) {
             mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
         }
         CardPresenter cardPresenter = new CardPresenter();
-        ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(cardPresenter);
+//        ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(cardPresenter);
 
-        int i;
-        for (i = 0; i < bangumis.size(); i++) {
-            listRowAdapter.add(bangumis.get(i));
+//        for(Bangumi bangumi : bangumis){
+//            if(bangumi.getType() == 2){
+//                ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(cardPresenter);
+//                if bangumis.indexOf(bangumi)
+//            }
+//        }
+
+//        int i;
+
+        HashMap<String, ArrayObjectAdapter> bangumiMap = new HashMap<String, ArrayObjectAdapter>();
+        ArrayList<String> seasonList = new ArrayList<String>();
+
+        String lastSeason = "";
+
+        for (Bangumi bangumi : bangumis) {
+            String currentSeason = null;
+            try {
+                currentSeason = Utils.getSeason(getActivity(), bangumi);
+            } catch (ParseException e) {
+                currentSeason = "other";
+                e.printStackTrace();
+            }
+            if (bangumi.getType() == type) {
+                if (!currentSeason.equals(lastSeason)) {
+                    ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(cardPresenter);
+                    listRowAdapter.add(bangumi);
+                    bangumiMap.put(currentSeason, listRowAdapter);
+                    lastSeason = currentSeason;
+                    seasonList.add(currentSeason);
+                } else {
+                    bangumiMap.get(lastSeason).add(bangumi);
+                }
+            }
         }
 
-        HeaderItem header;
-
-        if (mRowsAdapter.size() == 0) {
-            switch (type) {
-                case 2:
-                    header = new HeaderItem(0, getResources().getString(R.string.Bangumi));
-                    mRowsAdapter.add(new ListRow(header, listRowAdapter));
-                    break;
-                case 6:
-                    header = new HeaderItem(1, getResources().getString(R.string.TV_serious));
-                    mRowsAdapter.add(new ListRow(header, listRowAdapter));
-                    break;
-            }
-        } else if (mRowsAdapter.size() == 1) {
-            switch (type) {
-                case 2:
-                    header = new HeaderItem(0, getResources().getString(R.string.Bangumi));
-                    mRowsAdapter.add(0, new ListRow(header, listRowAdapter));
-                    break;
-                case 6:
-                    header = new HeaderItem(1, getResources().getString(R.string.TV_serious));
-                    mRowsAdapter.add(new ListRow(header, listRowAdapter));
-                    break;
-            }
-            ((ProgressBar)getActivity().findViewById(R.id.temp)).setVisibility(View.GONE);
-            setAdapter(mRowsAdapter);
+        int i = 0;
+        for(String season : seasonList){
+            HeaderItem header = new HeaderItem(i, season);
+            mRowsAdapter.add(new ListRow(header, bangumiMap.get(season)));
+            i++;
         }
+
+        ((ProgressBar)getActivity().findViewById(R.id.temp)).setVisibility(View.GONE);
+        setAdapter(mRowsAdapter);
+//
+//        HeaderItem header;
+
+//        if (mRowsAdapter.size() == 0) {
+//            switch (type) {
+//                case 2:
+//                    header = new HeaderItem(0, getResources().getString(R.string.Bangumi));
+//                    mRowsAdapter.add(new ListRow(header, listRowAdapter));
+//                    break;
+//                case 6:
+//                    header = new HeaderItem(1, getResources().getString(R.string.TV_serious));
+//                    mRowsAdapter.add(new ListRow(header, listRowAdapter));
+//                    break;
+//            }
+//        } else if (mRowsAdapter.size() == 1) {
+//            switch (type) {
+//                case 2:
+//                    header = new HeaderItem(0, getResources().getString(R.string.Bangumi));
+//                    mRowsAdapter.add(0, new ListRow(header, listRowAdapter));
+//                    break;
+//                case 6:
+//                    header = new HeaderItem(1, getResources().getString(R.string.TV_serious));
+//                    mRowsAdapter.add(new ListRow(header, listRowAdapter));
+//                    break;
+//            }
+//            setAdapter(mRowsAdapter);
+//        }
     }
 
     private void setupEventListeners() {

@@ -31,9 +31,9 @@ public class HomeFragment extends BrowseFragment {
     private static final String BACKGROUND = "Background";
     private static final String HEADER_NAME_1 = "On Air";
     private static final long HEADER_ID_2 = 2;
-    private static final String HEADER_NAME_2 = "Rows Fragment";
+    private static final String HEADER_NAME_2 = "All Bangumi";
     private static final long HEADER_ID_3 = 3;
-    private static final String HEADER_NAME_3 = "Settings Fragment";
+    private static final String HEADER_NAME_3 = "All TV Serious";
     private static final long HEADER_ID_4 = 4;
     private static final String HEADER_NAME_4 = "User agreement Fragment";
     private BackgroundManager mBackgroundManager;
@@ -104,6 +104,13 @@ public class HomeFragment extends BrowseFragment {
         PageRow pageRow1 = new PageRow(headerItem1);
         mRowsAdapter.add(pageRow1);
 
+        HeaderItem headerItem2 = new HeaderItem(HEADER_ID_2, getResources().getString(R.string.all_bangumi));
+        PageRow pageRow2 = new PageRow(headerItem2);
+        mRowsAdapter.add(pageRow2);
+
+        HeaderItem headerItem3 = new HeaderItem(HEADER_ID_3, getResources().getString(R.string.all_tv_serious));
+        PageRow pageRow3 = new PageRow(headerItem3);
+        mRowsAdapter.add(pageRow3);
     }
 
     private static class PageRowFragmentFactory extends BrowseFragment.FragmentFactory {
@@ -119,6 +126,10 @@ public class HomeFragment extends BrowseFragment {
             mBackgroundManager.setDrawable(null);
             if (row.getHeaderItem().getId() == HEADER_ID_1) {
                 return new BangumiListFragment();
+            } else if (row.getHeaderItem().getId() == HEADER_ID_2) {
+                return new AllBangumiFragment(2);
+            } else if (row.getHeaderItem().getId() == HEADER_ID_3) {
+                return new AllBangumiFragment(6);
             }
 
             throw new IllegalArgumentException(String.format("Invalid row %s", rowObj));

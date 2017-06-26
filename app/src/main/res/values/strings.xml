@@ -43,13 +43,19 @@
     <!-- Home Title -->
     <string name="on_air">On Air</string>
     <string name="my_favorite">My Favorite</string>
-    <string name="all">All</string>
+    <string name="all_bangumi">All Bangumi</string>
+    <string name="all_tv_serious">All TV Serious</string>
     <string name="setting">Settings</string>
 
     <!-- Category -->
     <string name="Bangumi">Bangumi</string>
     <string name="TV_serious">TV Serious</string>
 
+    <!-- Seasons -->
+    <string name="spring">Spring</string>
+    <string name="summer">Summer</string>
+    <string name="autumn">Autumn</string>
+    <string name="winter">Winter</string>
 
     <!-- Error messages -->
     <string name="video_error_media_load_timeout" translatable="false">Media loading timed out</string>

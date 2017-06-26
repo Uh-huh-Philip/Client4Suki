@@ -8,11 +8,18 @@
     <!-- Home Title -->
     <string name="on_air">本季新番</string>
     <string name="my_favorite">我的收藏</string>
-    <string name="all">库</string>
     <string name="setting">设置</string>
 
 
     <!-- Category -->
     <string name="Bangumi">番剧</string>
     <string name="TV_serious">电视剧</string>
+
+    <!-- Seasons -->
+    <string name="spring">春季番</string>
+    <string name="summer">夏季番</string>
+    <string name="autumn">秋季番</string>
+    <string name="winter">冬季番</string>
+    <string name="all_bangumi">全部番剧</string>
+    <string name="all_tv_serious">全部电视剧</string>
 </resources>

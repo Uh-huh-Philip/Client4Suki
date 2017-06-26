@@ -23,6 +23,8 @@ import android.support.v17.leanback.widget.ControlButtonPresenterSelector;
 import android.support.v17.leanback.widget.OnActionClickedListener;
 import android.support.v17.leanback.widget.PlaybackControlsRow;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -113,9 +115,11 @@ public class PlaybackControlHelper extends PlaybackControlGlue {
                 mFragment.pause();
             }
         } else if (action instanceof PlaybackControlsRow.FastForwardAction) {
-            Toast.makeText((PlaybackActivity) getContext(), getContext().getResources().getString(R.string.to_be_done), Toast.LENGTH_SHORT).show();
+            mFragment.FastForward();
+//            Toast.makeText((PlaybackActivity) getContext(), getContext().getResources().getString(R.string.to_be_done), Toast.LENGTH_SHORT).show();
         } else if (action instanceof PlaybackControlsRow.RewindAction) {
-            Toast.makeText((PlaybackActivity) getContext(), getContext().getResources().getString(R.string.to_be_done), Toast.LENGTH_SHORT).show();
+            mFragment.Rewind();
+//            Toast.makeText((PlaybackActivity) getContext(), getContext().getResources().getString(R.string.to_be_done), Toast.LENGTH_SHORT).show();
         } else if (action instanceof PlaybackControlsRow.SkipNextAction) {
             Toast.makeText((PlaybackActivity) getContext(), getContext().getResources().getString(R.string.to_be_done), Toast.LENGTH_SHORT).show();
         } else if (action instanceof PlaybackControlsRow.SkipPreviousAction) {
@@ -211,8 +215,8 @@ public class PlaybackControlHelper extends PlaybackControlGlue {
 
     @Override
     public long getSupportedActions() {
-        return ACTION_PLAY_PAUSE | ACTION_FAST_FORWARD | ACTION_REWIND | ACTION_SKIP_TO_PREVIOUS |
-                ACTION_SKIP_TO_NEXT;
+        return ACTION_PLAY_PAUSE | ACTION_FAST_FORWARD | ACTION_REWIND /*| ACTION_SKIP_TO_PREVIOUS |
+                ACTION_SKIP_TO_NEXT*/;
     }
 
     @Override
@@ -258,5 +262,14 @@ public class PlaybackControlHelper extends PlaybackControlGlue {
             mHandler.removeCallbacks(mUpdateProgressRunnable);
             mUpdateProgressRunnable = null;
         }
+    }
+
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+        Log.d(TAG, "View: " + v.toString());
+        Log.d(TAG, "KeyCode: " + keyCode);
+        Log.d(TAG, "KeyEvent: " + event.toString());
+        return super.onKey(v, keyCode,event);
     }
 }

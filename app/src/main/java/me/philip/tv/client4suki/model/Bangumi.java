@@ -21,7 +21,7 @@ public class Bangumi implements Serializable {
     private String bangumi_moe;
     private String libyk_so;
     private String dmhy;
-    private String type;
+    private int type;
     private String status;
     private String air_date;
     private String air_weekday;
@@ -136,11 +136,11 @@ public class Bangumi implements Serializable {
         this.dmhy = dmhy;
     }
 
-    public String getType() {
+    public int getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(int type) {
         this.type = type;
     }
 

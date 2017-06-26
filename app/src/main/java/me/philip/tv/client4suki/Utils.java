@@ -22,7 +22,12 @@ import android.view.Display;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+
+import me.philip.tv.client4suki.model.Bangumi;
 
 /**
  * A collection of utility methods, all static.
@@ -101,5 +106,26 @@ public class Utils {
             mmr.setDataSource(videoUrl);
         }
         return Long.parseLong(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
+    }
+
+    public static String getSeason(Context context, Bangumi bangumi) throws ParseException {
+        String year;
+        int month;
+        String season = "";
+        Date date = (new SimpleDateFormat("yyyy-mm-dd")).parse(bangumi.getAir_date());
+        year = (new SimpleDateFormat("yyyy")).format(date);
+        month = Integer.parseInt((new SimpleDateFormat("mm")).format(date));
+
+        if (month == 12 || month == 1 ||month == 2){
+            season = context.getResources().getString(R.string.winter);
+        } else if (month>=3 && month <=5){
+            season = context.getResources().getString(R.string.spring);
+        } else if (month>=6 && month <=8){
+            season = context.getResources().getString(R.string.summer);
+        } else if (month>=9 && month <=11){
+            season = context.getResources().getString(R.string.autumn);
+        }
+
+        return year +" "+ season ;
     }
 }

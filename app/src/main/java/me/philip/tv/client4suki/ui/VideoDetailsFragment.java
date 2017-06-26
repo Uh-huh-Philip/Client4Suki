@@ -38,6 +38,9 @@ import android.support.v17.leanback.widget.SparseArrayObjectAdapter;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -114,6 +117,13 @@ public class VideoDetailsFragment extends DetailsFragment {
             Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);
         }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState){
+
+        return super.onCreateView(inflater, container,savedInstanceState);
     }
 
     @Override
@@ -263,8 +273,10 @@ public class VideoDetailsFragment extends DetailsFragment {
                         mBangumidetail = new Gson().fromJson(data, BangumiDetail.class);
 //                        setupDetailsOverviewRow();
 //                        setupDetailsOverviewRowPresenter();
-                        setupMovieListRow();
-                        setupMovieListRowPresenter();
+                        if(getActivity() != null) {
+                            setupMovieListRow();
+                            setupMovieListRowPresenter();
+                        }
 //                        updateBackground(mSelectedBangumi.getCover());
                         Log.d("TAG", "BangumiDetail Loaded");
                     }
