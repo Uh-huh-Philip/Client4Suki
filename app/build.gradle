@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "me.philip.tv.client4suki"
         minSdkVersion 21
-        targetSdkVersion 25
-        versionCode 20170618
-        versionName "0.0.3"
+        targetSdkVersion 26
+        versionCode 20171115
+        versionName "0.1.0"
     }
     buildTypes {
         release {
@@ -20,8 +20,8 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:leanback-v17:25.3.1'
-    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:leanback-v17:26.1.0'
+    compile 'com.android.support:appcompat-v7:26.1.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.squareup.okhttp3:okhttp:3.8.0'
